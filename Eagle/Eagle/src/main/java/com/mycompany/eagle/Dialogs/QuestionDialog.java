@@ -5,14 +5,28 @@
  */
 package com.mycompany.eagle.Dialogs;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
+import com.mycompany.eagle.Entities.ListOfQuestions;
 import com.mycompany.eagle.Entities.Question;
 import com.mycompany.eagle.Utilities.FirebaseCaller;
 import com.mycompany.eagle.Utilities.UrlManager;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import net.thegreshams.firebase4j.error.FirebaseException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -22,6 +36,7 @@ public class QuestionDialog extends javax.swing.JDialog {
 
     private String correct_answer;
     private String difficulty;
+    private ArrayList<Question> list_of_questions;
     private static final String NUMERIC_STRING = "0123456789";
 
     public QuestionDialog(java.awt.Frame parent, boolean modal) {
@@ -457,7 +472,18 @@ public class QuestionDialog extends javax.swing.JDialog {
                 q_rationale, correct_answer, randomAlphaNumeric(10), course, 
                 subject, topic, difficulty);
         
-        addQuestion(question);
+        try {
+            try {
+                readQuestions();
+//            addQuestion(question);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
     }//GEN-LAST:event_btn_question_addMouseClicked
 
@@ -512,12 +538,31 @@ public class QuestionDialog extends javax.swing.JDialog {
         });
     }
 
-    private void addQuestion(Question question) {
+    private void addQuestion(Question question) throws IOException {
         //PLACE QUESTION IN JSON FILE THEN SAVE IN DIRECTORY
-        JSONObject question_object = new JSONObject();
-        question_object.put("question", question.getQ_question());
-        question_object.put("a", question.getQ_a());
-        question_object.put("b", question.getQ_b());
+        JSONObject inner_object = new JSONObject();
+        inner_object.put("question", question.getQ_question());
+        inner_object.put("a", question.getQ_a());
+        inner_object.put("b", question.getQ_b());
+        inner_object.put("c", question.getQ_c());
+        inner_object.put("d", question.getQ_d());
+        inner_object.put("rationale", question.getQ_rationale());
+        inner_object.put("uid", question.getQ_uid());
+        inner_object.put("answer", question.getQ_answer());
+        inner_object.put("course", question.getCourse());
+        inner_object.put("subject", question.getSubject());
+        inner_object.put("topic", question.getTopic());
+        inner_object.put("difficulty", question.getDifficulty());
+        
+        JSONObject outer_object = new JSONObject();
+        outer_object.put(question.getQ_uid(), inner_object);
+        
+        FileWriter jsonFile = new FileWriter("ListOfQuestions.json");
+        jsonFile.write(outer_object.toJSONString());
+        jsonFile.flush();
+        
+        JOptionPane.showMessageDialog(null, "Question successfully added");
+        
     }
 
     public static String randomAlphaNumeric(int count) {
@@ -567,4 +612,26 @@ public class QuestionDialog extends javax.swing.JDialog {
     private javax.swing.JTextField tf_question_subject;
     private javax.swing.JTextField tf_question_topic;
     // End of variables declaration//GEN-END:variables
+
+    private void readQuestions() throws FileNotFoundException, IOException, 
+            ParseException {
+         //Read list of questions in file then save in an arraylist 
+         JSONObject obj = (JSONObject) new JSONParser()
+                 .parse(new FileReader("ListOfQuestions.json")); 
+         GsonBuilder gsonBuilder = new GsonBuilder();
+         QuestionDeserializer deserializer = new QuestionDeserializer();
+         gsonBuilder.registerTypeAdapter(ListOfQuestions.class, deserializer);
+         
+         Gson customGson = gsonBuilder.create();
+         System.out.println(obj.toJSONString());
+         ListOfQuestions customObject = customGson.fromJson(obj.toJSONString()
+                .replaceAll("^\"|\"$", ""), ListOfQuestions.class);
+         
+    }
+
+    private static class QuestionDeserializer implements JsonDeserializer<ListOfQuestions>{
+
+        
+    }
+
 }
