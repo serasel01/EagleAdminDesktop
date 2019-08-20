@@ -5,12 +5,36 @@
  */
 package com.mycompany.eagle.Dialogs;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.mycompany.eagle.Entities.ListOfQuestions;
+import com.mycompany.eagle.Entities.Question;
 import com.mycompany.eagle.Utilities.FirebaseCaller;
 import com.mycompany.eagle.Utilities.UrlManager;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import net.thegreshams.firebase4j.error.FirebaseException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 /**
  *
@@ -20,7 +44,9 @@ public class QuestionDialog extends javax.swing.JDialog {
 
     private String correct_answer;
     private String difficulty;
-    
+    private ArrayList<Question> list_of_questions;
+    private static final String NUMERIC_STRING = "0123456789";
+
     public QuestionDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -372,36 +398,36 @@ public class QuestionDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void rad_question_easyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rad_question_easyActionPerformed
-        if (rad_question_easy.isSelected()){
+        if (rad_question_easy.isSelected()) {
             difficulty = "Easy";
-            
+
             rad_question_medium.setSelected(false);
             rad_question_hard.setSelected(false);
         }
     }//GEN-LAST:event_rad_question_easyActionPerformed
 
     private void rad_question_mediumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rad_question_mediumActionPerformed
-        if (rad_question_medium.isSelected()){
+        if (rad_question_medium.isSelected()) {
             difficulty = "Medium";
-            
+
             rad_question_easy.setSelected(false);
             rad_question_hard.setSelected(false);
         }
     }//GEN-LAST:event_rad_question_mediumActionPerformed
 
     private void rad_question_hardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rad_question_hardActionPerformed
-        if (rad_question_hard.isSelected()){
+        if (rad_question_hard.isSelected()) {
             difficulty = "Hard";
-            
+
             rad_question_medium.setSelected(false);
             rad_question_easy.setSelected(false);
         }
     }//GEN-LAST:event_rad_question_hardActionPerformed
 
     private void rad_question_aActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rad_question_aActionPerformed
-        if (rad_question_a.isSelected()){
+        if (rad_question_a.isSelected()) {
             correct_answer = "A";
-            
+
             rad_question_b.setSelected(false);
             rad_question_c.setSelected(false);
             rad_question_d.setSelected(false);
@@ -409,9 +435,9 @@ public class QuestionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_rad_question_aActionPerformed
 
     private void rad_question_bActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rad_question_bActionPerformed
-        if (rad_question_b.isSelected()){
+        if (rad_question_b.isSelected()) {
             correct_answer = "B";
-            
+
             rad_question_a.setSelected(false);
             rad_question_c.setSelected(false);
             rad_question_d.setSelected(false);
@@ -419,9 +445,9 @@ public class QuestionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_rad_question_bActionPerformed
 
     private void rad_question_cActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rad_question_cActionPerformed
-        if (rad_question_c.isSelected()){
+        if (rad_question_c.isSelected()) {
             correct_answer = "C";
-            
+
             rad_question_a.setSelected(false);
             rad_question_b.setSelected(false);
             rad_question_d.setSelected(false);
@@ -429,9 +455,9 @@ public class QuestionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_rad_question_cActionPerformed
 
     private void rad_question_dActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rad_question_dActionPerformed
-        if (rad_question_d.isSelected()){
+        if (rad_question_d.isSelected()) {
             correct_answer = "D";
-            
+
             rad_question_a.setSelected(false);
             rad_question_c.setSelected(false);
             rad_question_b.setSelected(false);
@@ -439,29 +465,33 @@ public class QuestionDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_rad_question_dActionPerformed
 
     private void btn_question_addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_question_addMouseClicked
-//        Question question = new Question(String q_a, String q_b, String q_c, String q_d, String q_question, 
-//            String q_rationale, String q_answer, String q_uid, String course, 
-//            String subject, String topic, String difficulty);
+
+        String q_question = tf_question_question.getText();
+        String q_rationale = tf_question_rationale.getText();
+        String q_a = tf_question_a.getText();
+        String q_b = tf_question_b.getText();
+        String q_c = tf_question_c.getText();
+        String q_d = tf_question_d.getText();
+        String course = tf_question_course.getText();
+        String topic = tf_question_topic.getText();
+        String subject = tf_question_subject.getText();
+
+        Question question = new Question(q_a, q_b, q_c, q_d, q_question,
+                q_rationale, correct_answer, randomAlphaNumeric(10), course, 
+                subject, topic, difficulty);
         
-        
-        tf_question_question.getText();
-        tf_question_rationale.getText();
-        tf_question_a.getText();
-        tf_question_b.getText();
-        tf_question_c.getText();
-        tf_question_d.getText();
-        tf_question_course.getText();
-        tf_question_topic.getText();
-        tf_question_subject.getText();
-        
-//        try {
-//            new FirebaseCaller(new UrlManager().getMain()).addQuestion(question);
-//        } catch (FirebaseException ex) {
-//            Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (UnsupportedEncodingException ex) {
-//            Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        
+        try {
+            try {
+                addQuestion(new ListOfQuestions().readQuestions(), question);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
     }//GEN-LAST:event_btn_question_addMouseClicked
 
     private void btn_question_cancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_question_cancelMouseClicked
@@ -515,6 +545,28 @@ public class QuestionDialog extends javax.swing.JDialog {
         });
     }
 
+    private void addQuestion(ListOfQuestions readQuestions, Question question) 
+            throws IOException {
+        
+        readQuestions.getQuestions().add(question);
+  
+        FileWriter jsonFile = new FileWriter("ListOfQuestions.json");
+        jsonFile.write(new ListOfQuestions().saveQuestions(readQuestions));
+        jsonFile.flush();
+        
+        JOptionPane.showMessageDialog(null, "Question successfully added");
+        
+    }
+
+    public static String randomAlphaNumeric(int count) {
+        StringBuilder builder = new StringBuilder();
+        while (count-- != 0) {
+            int character = (int) (Math.random() * NUMERIC_STRING.length());
+            builder.append(NUMERIC_STRING.charAt(character));
+        }
+        return builder.toString();
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel btn_question_add;
     private javax.swing.JPanel btn_question_cancel;
@@ -553,4 +605,5 @@ public class QuestionDialog extends javax.swing.JDialog {
     private javax.swing.JTextField tf_question_subject;
     private javax.swing.JTextField tf_question_topic;
     // End of variables declaration//GEN-END:variables
+
 }

@@ -117,7 +117,6 @@ public class FirebaseCaller {
             
             return jsonCourse;
         }
-
     }
 
     public class StudentDeserializer implements JsonDeserializer<ListOfStudents> {

@@ -16,7 +16,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import net.thegreshams.firebase4j.error.FirebaseException;
-import org.netbeans.lib.awtextra.AbsoluteLayout;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -945,7 +944,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Roboto Bk", 0, 25)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Serasel\\Documents\\NetBeansProjects\\Eagle\\src\\main\\java\\com\\mycompany\\eagle\\Resources\\eaglereviewer icon.png")); // NOI18N
         jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, -1, -1));
 
         jPanel11.setBackground(new java.awt.Color(0, 154, 168));
@@ -1086,6 +1084,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void pn_main_examMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn_main_examMouseClicked
         switchPanel(pn_lp_exam);
         pn_main_exam.setBackground(Color.decode("#00BFD1"));
+        //Display questions on jtable
     }//GEN-LAST:event_pn_main_examMouseClicked
 
     private void pn_main_resultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pn_main_resultMouseClicked
