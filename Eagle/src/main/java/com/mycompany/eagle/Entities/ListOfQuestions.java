@@ -42,27 +42,29 @@ public class ListOfQuestions {
         return questions;
     }
 
-    public void setStudents(ArrayList<Question> questions) {
+    public void setQuestions(ArrayList<Question> questions) {
         this.questions = questions;
     }
     
 
     public ListOfQuestions readQuestions() throws FileNotFoundException, IOException, 
             ParseException {
-         //Read list of questions in file then save in an arraylist 
-         JSONObject obj = (JSONObject) new JSONParser()
-                 .parse(new FileReader("ListOfQuestions.json")); 
-         GsonBuilder gsonBuilder = new GsonBuilder();
-         QuestionDeserializer deserializer = new QuestionDeserializer();
-         gsonBuilder.registerTypeAdapter(ListOfQuestions.class, deserializer);
+        //Read list of questions in file then save in an arraylist 
+        JSONObject obj = (JSONObject) new JSONParser()
+                .parse(new FileReader("ListOfQuestions.json")); 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        QuestionsDeserializer deserializer = new QuestionsDeserializer();
+        gsonBuilder.registerTypeAdapter(ListOfQuestions.class, deserializer);
          
-         Gson customGson = gsonBuilder.create();
-         System.out.println(obj.toJSONString());
-         ListOfQuestions customObject = customGson.fromJson(obj.toJSONString(), 
+        Gson customGson = gsonBuilder.create();
+        System.out.println(obj.toJSONString());
+        ListOfQuestions questionList = customGson.fromJson(obj.toJSONString(), 
                  ListOfQuestions.class);
          
-         return customObject;
+        return questionList;
     }
+    
+    //CREATE FUNCTION FOR DELETING A QUESTION VIA PARSING
     
     public String saveQuestions(ListOfQuestions readQuestions){
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -73,7 +75,7 @@ public class ListOfQuestions {
     }
 
   
-    public static class QuestionDeserializer implements JsonDeserializer<ListOfQuestions>{
+    public static class QuestionsDeserializer implements JsonDeserializer<ListOfQuestions>{
 
         @Override
         public ListOfQuestions deserialize(JsonElement je, java.lang.reflect.Type type, 
@@ -95,7 +97,7 @@ public class ListOfQuestions {
                 questions.add(question);
             }
 
-            listOfQuestions.setStudents(questions);
+            listOfQuestions.setQuestions(questions);
             return listOfQuestions;  
         }     
     }

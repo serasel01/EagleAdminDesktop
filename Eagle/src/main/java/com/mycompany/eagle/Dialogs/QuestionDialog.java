@@ -42,8 +42,7 @@ import org.json.simple.parser.ParseException;
  */
 public class QuestionDialog extends javax.swing.JDialog {
 
-    private String correct_answer;
-    private String difficulty;
+    private String correct_answer, difficulty, id;
     private ArrayList<Question> list_of_questions;
     private static final String NUMERIC_STRING = "0123456789";
 
@@ -54,6 +53,13 @@ public class QuestionDialog extends javax.swing.JDialog {
 
     public QuestionDialog() {
         initComponents();
+    }
+
+    public QuestionDialog(String id) throws IOException, FileNotFoundException, 
+            ParseException {
+        this.id = id;
+        initComponents();
+        initValues();
     }
 
     /**
@@ -605,5 +611,51 @@ public class QuestionDialog extends javax.swing.JDialog {
     private javax.swing.JTextField tf_question_subject;
     private javax.swing.JTextField tf_question_topic;
     // End of variables declaration//GEN-END:variables
+
+    private void initValues() throws IOException, FileNotFoundException, 
+            ParseException {
+       ListOfQuestions list = new ListOfQuestions().readQuestions();
+       
+       for (Question question : list.getQuestions()){
+           if (question.getQ_uid().equals(id)){
+               tf_question_course.setText(question.getCourse());
+               tf_question_subject.setText(question.getSubject());
+               tf_question_topic.setText(question.getTopic());
+               tf_question_question.setText(question.getQ_question());
+               tf_question_rationale.setText(question.getQ_rationale());
+               tf_question_a.setText(question.getQ_a());
+               tf_question_b.setText(question.getQ_b());
+               tf_question_c.setText(question.getQ_c());
+               tf_question_d.setText(question.getQ_d());
+               
+               switch (question.getQ_answer()){
+                   case "A":
+                       rad_question_a.setSelected(true);
+                       break;
+                   case "B":
+                       rad_question_b.setSelected(true);
+                       break;
+                   case "C":
+                       rad_question_c.setSelected(true);
+                       break;
+                   case "D":
+                       rad_question_d.setSelected(true);
+                       break;
+               }
+               
+               switch (question.getDifficulty()){
+                   case "Easy":
+                       rad_question_easy.setSelected(true);
+                       break;
+                   case "Medium":
+                       rad_question_medium.setSelected(true);
+                       break;
+                   case "Hard":
+                       rad_question_hard.setSelected(true);
+                       break;
+               }
+           }
+       }
+    }
 
 }
