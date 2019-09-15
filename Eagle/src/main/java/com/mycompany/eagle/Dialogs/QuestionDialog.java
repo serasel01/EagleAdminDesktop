@@ -24,7 +24,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -72,14 +74,14 @@ public class QuestionDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel15 = new javax.swing.JLabel();
+        lb_title = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         tf_question_a = new javax.swing.JTextField();
         tf_question_question = new javax.swing.JTextField();
         btn_question_cancel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         btn_question_add = new javax.swing.JPanel();
-        jLabel12 = new javax.swing.JLabel();
+        lb_button = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -113,9 +115,9 @@ public class QuestionDialog extends javax.swing.JDialog {
 
         jPanel1.setBackground(new java.awt.Color(0, 191, 209));
 
-        jLabel15.setFont(new java.awt.Font("Roboto Bk", 0, 25)); // NOI18N
-        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel15.setText("Add Question");
+        lb_title.setFont(new java.awt.Font("Roboto Bk", 0, 25)); // NOI18N
+        lb_title.setForeground(new java.awt.Color(255, 255, 255));
+        lb_title.setText("Add Question");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -123,14 +125,14 @@ public class QuestionDialog extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jLabel15)
+                .addComponent(lb_title)
                 .addContainerGap(504, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(jLabel15)
+                .addComponent(lb_title)
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
@@ -189,22 +191,22 @@ public class QuestionDialog extends javax.swing.JDialog {
             }
         });
 
-        jLabel12.setBackground(new java.awt.Color(102, 102, 102));
-        jLabel12.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("ADD");
-        jLabel12.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
+        lb_button.setBackground(new java.awt.Color(102, 102, 102));
+        lb_button.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        lb_button.setForeground(new java.awt.Color(255, 255, 255));
+        lb_button.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_button.setText("ADD");
+        lb_button.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
 
         javax.swing.GroupLayout btn_question_addLayout = new javax.swing.GroupLayout(btn_question_add);
         btn_question_add.setLayout(btn_question_addLayout);
         btn_question_addLayout.setHorizontalGroup(
             btn_question_addLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lb_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         btn_question_addLayout.setVerticalGroup(
             btn_question_addLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+            .addComponent(lb_button, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
         );
 
         jPanel3.add(btn_question_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 400, 130, -1));
@@ -472,6 +474,7 @@ public class QuestionDialog extends javax.swing.JDialog {
 
     private void btn_question_addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_question_addMouseClicked
 
+        Question question;
         String q_question = tf_question_question.getText();
         String q_rationale = tf_question_rationale.getText();
         String q_a = tf_question_a.getText();
@@ -481,10 +484,17 @@ public class QuestionDialog extends javax.swing.JDialog {
         String course = tf_question_course.getText();
         String topic = tf_question_topic.getText();
         String subject = tf_question_subject.getText();
-
-        Question question = new Question(q_a, q_b, q_c, q_d, q_question,
+        String keywords = tf_question_keywords.getText();
+        
+        if(id != null){
+            question = new Question(q_a, q_b, q_c, q_d, q_question,
+                q_rationale, correct_answer, id, course, subject, topic, 
+                    difficulty, keywords);
+        } else {
+            question = new Question(q_a, q_b, q_c, q_d, q_question,
                 q_rationale, correct_answer, randomAlphaNumeric(10), course, 
-                subject, topic, difficulty);
+                subject, topic, difficulty, keywords);
+        }
         
         try {
             try {
@@ -559,6 +569,7 @@ public class QuestionDialog extends javax.swing.JDialog {
         FileWriter jsonFile = new FileWriter("ListOfQuestions.json");
         jsonFile.write(new ListOfQuestions().saveQuestions(readQuestions));
         jsonFile.flush();
+        //saves a json file to local directory
         
         JOptionPane.showMessageDialog(null, "Question successfully added");
         
@@ -579,10 +590,8 @@ public class QuestionDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -593,6 +602,8 @@ public class QuestionDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lb_button;
+    private javax.swing.JLabel lb_title;
     private javax.swing.JRadioButton rad_question_a;
     private javax.swing.JRadioButton rad_question_b;
     private javax.swing.JRadioButton rad_question_c;
@@ -613,7 +624,13 @@ public class QuestionDialog extends javax.swing.JDialog {
     // End of variables declaration//GEN-END:variables
 
     private void initValues() throws IOException, FileNotFoundException, 
-            ParseException {
+            ParseException {    
+       
+       if(id != null){
+           lb_title.setText("Edit Question");
+           lb_button.setText("EDIT");
+       }
+       
        ListOfQuestions list = new ListOfQuestions().readQuestions();
        
        for (Question question : list.getQuestions()){
@@ -627,6 +644,7 @@ public class QuestionDialog extends javax.swing.JDialog {
                tf_question_b.setText(question.getQ_b());
                tf_question_c.setText(question.getQ_c());
                tf_question_d.setText(question.getQ_d());
+               tf_question_keywords.setText(question.getKeywords());
                
                switch (question.getQ_answer()){
                    case "A":

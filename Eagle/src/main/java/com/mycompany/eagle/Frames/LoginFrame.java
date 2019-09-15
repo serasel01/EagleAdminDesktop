@@ -5,6 +5,8 @@ import com.mycompany.eagle.Utilities.FirebaseCaller;
 import com.mycompany.eagle.Utilities.SharedPrefManager;
 import com.mycompany.eagle.Utilities.UrlManager;
 import java.awt.Color;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +14,7 @@ import javax.swing.JOptionPane;
 import net.thegreshams.firebase4j.error.FirebaseException;
 import net.thegreshams.firebase4j.model.FirebaseResponse;
 import net.thegreshams.firebase4j.service.Firebase;
+import org.json.simple.parser.ParseException;
 
 public class LoginFrame extends javax.swing.JFrame {
 
@@ -88,7 +91,7 @@ public class LoginFrame extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Roboto Bk", 0, 24)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Serasel\\Documents\\NetBeansProjects\\Eagle\\src\\main\\java\\com\\mycompany\\eagle\\Resources\\eaglereviewer icon.png")); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/eaglereviewer icon.png"))); // NOI18N
 
         pf_login_password.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
         pf_login_password.setForeground(new java.awt.Color(0, 131, 143));
@@ -125,7 +128,7 @@ public class LoginFrame extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(jLabel3)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
@@ -155,9 +158,11 @@ public class LoginFrame extends javax.swing.JFrame {
     private void btn_login_loginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_login_loginMouseClicked
         try {
             authenticateUser(tf_login_id.getText(), pf_login_password.getText());
-        } catch (FirebaseException ex) {
+        } catch (FirebaseException | ParseException ex) {
             Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
         } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(LoginFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_login_loginMouseClicked
@@ -190,6 +195,32 @@ public class LoginFrame extends javax.swing.JFrame {
             }
         });
     }
+    
+     private void authenticateUser(String id, String password) throws 
+            FirebaseException, UnsupportedEncodingException, IOException, 
+            FileNotFoundException, ParseException {
+        
+        UrlManager url = new UrlManager();
+        
+        if(new FirebaseCaller(url.setAdmin(id) + url.getPassword())
+                .loginUser(password)){
+            
+            String name = new FirebaseCaller(url.setAdmin(id) + url.getName())
+                    .getUserName(); //gets name from the link
+            
+            //save into shared preferences
+            SharedPrefManager spm = new SharedPrefManager();
+            spm.setId(id);
+            spm.setName(name);
+            
+            this.dispose(); //closes login frame
+            new MainFrame(id, name).setVisible(true); //opens main frame
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Wrong id or password");
+        }
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel btn_login_login;
@@ -201,27 +232,5 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JTextField tf_login_id;
     // End of variables declaration//GEN-END:variables
 
-    private void authenticateUser(String id, String password) throws 
-            FirebaseException, UnsupportedEncodingException {
-        
-        UrlManager url = new UrlManager();
-        
-        if(new FirebaseCaller(url.setAdmin(id) + url.getPassword())
-                .loginUser(password)){
-            
-            String name = new FirebaseCaller(url.setAdmin(id) + url.getName())
-                    .getUserName();
-            
-            SharedPrefManager spm = new SharedPrefManager();
-            spm.setId(id);
-            spm.setName(name);
-            
-            this.dispose();
-            new MainFrame(id, name).setVisible(true);
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "Wrong id or password");
-        }
-        
-    }
+   
 }

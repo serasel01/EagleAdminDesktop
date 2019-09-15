@@ -5,9 +5,11 @@
  */
 package com.mycompany.eagle.Entities;
 
+import java.util.ArrayList;
+
 public class Question {
     private String q_a, q_b, q_c, q_d, q_question, q_rationale, q_answer, q_uid, 
-            course, subject, topic, difficulty;
+            course, subject, topic, difficulty, keywords;
 
     public Question(String q_a, String q_b, String q_c, String q_d, 
             String q_question, String q_rationale, String q_answer, String q_uid) {
@@ -23,7 +25,7 @@ public class Question {
 
     public Question(String q_a, String q_b, String q_c, String q_d, String q_question, 
             String q_rationale, String q_answer, String q_uid, String course, 
-            String subject, String topic, String difficulty) {
+            String subject, String topic, String difficulty, String keywords) {
         this.q_a = q_a;
         this.q_b = q_b;
         this.q_c = q_c;
@@ -36,6 +38,11 @@ public class Question {
         this.subject = subject;
         this.topic = topic;
         this.difficulty = difficulty;
+        this.keywords = keywords;
+    }
+
+    public String getKeywords() {
+        return keywords;
     }
 
     public String getQ_a() {

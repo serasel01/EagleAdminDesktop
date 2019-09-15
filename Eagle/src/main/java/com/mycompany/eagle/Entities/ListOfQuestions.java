@@ -17,6 +17,7 @@ import com.google.gson.JsonSerializer;
 import com.mycompany.eagle.Utilities.FirebaseCaller;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -65,6 +66,26 @@ public class ListOfQuestions {
     }
     
     //CREATE FUNCTION FOR DELETING A QUESTION VIA PARSING
+    public void deleteQuestion (String id) throws FileNotFoundException, 
+            IOException, ParseException {
+        JsonObject obj = (JsonObject) new Gson().fromJson(new FileReader(
+                "ListOfQuestions.json"), JsonObject.class);
+        obj.getAsJsonObject("questions").remove(id);
+        
+        FileWriter jsonFile = new FileWriter("ListOfQuestions.json");
+        jsonFile.write(new Gson().toJson(obj));
+        jsonFile.flush();
+    }
+    
+    public Question searchQuestion (String id) throws FileNotFoundException {
+        JsonObject obj = (JsonObject) new Gson().fromJson(new FileReader(
+                "ListOfQuestions.json"), JsonObject.class);
+        JsonObject question_obj = obj.getAsJsonObject("questions")
+                .getAsJsonObject(id);
+        
+        Question question = new Gson().fromJson(question_obj, Question.class);
+        return question;
+    }
     
     public String saveQuestions(ListOfQuestions readQuestions){
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -129,6 +150,7 @@ public class ListOfQuestions {
                 questionObj.addProperty("subject", question.getSubject());
                 questionObj.addProperty("topic", question.getTopic());
                 questionObj.addProperty("difficulty", question.getDifficulty());
+                questionObj.addProperty("keywords", question.getKeywords());
                 
                 jsonQuestionsList.add(question.getQ_uid(), questionObj);
             }

@@ -5,6 +5,8 @@
  */
 package com.mycompany.eagle.Entities;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Serasel
@@ -12,14 +14,31 @@ package com.mycompany.eagle.Entities;
 public class Student {
 
     private String stu_course, stu_id, stu_name;
+    private ArrayList <Result> results;
 
     public Student() {
     }
+    
+    public Student (String stu_id) {
+        this.stu_id = stu_id;
+    }
 
+    public Student(ArrayList<Result> results) {
+        this.results = results;
+    }
+    
     public Student(String stu_course, String stu_id, String stu_name) {
         this.stu_course = stu_course;
         this.stu_id = stu_id;
         this.stu_name = stu_name;
+    }
+
+    public ArrayList<Result> getResults() {
+        return results;
+    }
+
+    public void setResults(ArrayList<Result> results) {
+        this.results = results;
     }
 
     public String getStu_course() {

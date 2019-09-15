@@ -5,6 +5,7 @@
  */
 package com.mycompany.eagle.Utilities;
 
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /**
@@ -34,6 +35,10 @@ public class SharedPrefManager {
     
     public String getName(){
         return prefs.get(USER_NAME, null);
+    }
+    
+    public void logout() throws BackingStoreException {
+        prefs.clear();
     }
     
 }

@@ -5,6 +5,7 @@
  */
 package com.mycompany.eagle.Dialogs;
 
+import com.mycompany.eagle.Entities.Student;
 import com.mycompany.eagle.Frames.*;
 import com.mycompany.eagle.Utilities.FirebaseCaller;
 import com.mycompany.eagle.Utilities.UrlManager;
@@ -19,7 +20,7 @@ import net.thegreshams.firebase4j.error.FirebaseException;
  * @author Serasel
  */
 public class StudentDialog extends javax.swing.JDialog {
-    private String id = null;
+    private Student student;
     
     public StudentDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -30,12 +31,12 @@ public class StudentDialog extends javax.swing.JDialog {
         initComponents();
     }
 
-    public StudentDialog(String id, String name, String course) {
+    public StudentDialog(Student student) {
         initComponents();
-        this.id = id;
-        tf_student_name.setText(name);
-        tf_student_id.setText(id);
-        tf_student_course.setText(course);
+        this.student = student;
+        tf_student_name.setText(student.getStu_name());
+        tf_student_id.setText(student.getStu_id());
+        tf_student_course.setText(student.getStu_course());
         lb_student_add.setText("UPDATE");
         lb_student_function.setText("Edit Student");
     }
@@ -227,7 +228,7 @@ public class StudentDialog extends javax.swing.JDialog {
         try {
             addStudent(tf_student_id.getText(), tf_student_name.getText(), tf_student_course.getText());
             
-            if (id.equals(null)){
+            if (student == null){
                 JOptionPane.showMessageDialog(null, tf_student_name.getText() 
                         + "has been added successfully.");
             } else {

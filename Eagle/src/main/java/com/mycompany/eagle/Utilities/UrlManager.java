@@ -5,6 +5,8 @@
  */
 package com.mycompany.eagle.Utilities;
 
+import com.mycompany.eagle.Entities.Question;
+
 /**
  *
  * @author Serasel
@@ -27,6 +29,24 @@ public class UrlManager {
         return main_url + "/Students/" + student_id;
     }
     
+    public String setStudentResults(String student_id){
+        String url = main_url + "/Students/" + student_id + "/Exam Results";
+        return url.replaceAll(" ", "%20");
+    }
+    
+    public String setQuestion (Question question){
+        String url = main_url + "/" + question.getCourse() + " Subjects/" 
+                + question.getSubject() + "/" + question.getTopic() + "/" 
+                + question.getDifficulty();
+        return url.replaceAll(" ", "%20");
+    }
+    
+    public String setKeywords (Question question){
+        String url = main_url + "/Keywords/" + question.getCourse() + " Subjects/"
+                + question.getSubject() + "/" + question.getTopic();
+        return url.replaceAll(" ", "%20");
+    }
+    
     public String getPassword(){
         return "/ad_password/";
     }
@@ -38,6 +58,8 @@ public class UrlManager {
     public String getMain(){
         return main_url;
     }
+    
+    
     
     
 }
