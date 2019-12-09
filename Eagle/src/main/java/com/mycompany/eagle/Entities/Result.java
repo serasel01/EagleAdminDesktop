@@ -24,6 +24,14 @@ public class Result {
         this.course = course;
     }
 
+    public Result(String res_corrects, String res_percent, String res_questions, 
+            String res_subject) {
+        this.res_corrects = res_corrects;
+        this.res_percent = res_percent;
+        this.res_questions = res_questions;
+        this.res_subject = res_subject;
+    }
+    
     public Result() {
     }
     

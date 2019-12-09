@@ -2,6 +2,7 @@ package com.mycompany.eagle.Frames;
 
 
 import com.mycompany.eagle.Utilities.FirebaseCaller;
+import com.mycompany.eagle.Utilities.GoogleCloudCaller;
 import com.mycompany.eagle.Utilities.SharedPrefManager;
 import com.mycompany.eagle.Utilities.UrlManager;
 import java.awt.Color;
@@ -27,29 +28,36 @@ public class LoginFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        tf_login_id = new javax.swing.JTextField();
-        btn_login_login = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btn_login_login = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        tf_login_id = new javax.swing.JTextField();
         pf_login_password = new javax.swing.JPasswordField();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(0, 131, 143));
+        jPanel1.setBackground(new java.awt.Color(51, 51, 51));
         jPanel1.setAutoscrolls(true);
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        tf_login_id.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        tf_login_id.setForeground(new java.awt.Color(0, 131, 143));
-        tf_login_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        tf_login_id.setText("ID");
-        tf_login_id.setToolTipText("");
-        tf_login_id.setBorder(null);
-        tf_login_id.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tf_login_idMouseClicked(evt);
-            }
-        });
+        jLabel2.setFont(new java.awt.Font("Roboto Bk", 0, 25)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Eagle Reviewer");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(39, 220, 250, -1));
+
+        jLabel3.setFont(new java.awt.Font("Roboto Bk", 0, 24)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/eaglereviewer icon.png"))); // NOI18N
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 250, -1));
+
+        jPanel2.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btn_login_login.setBackground(new java.awt.Color(244, 81, 30));
         btn_login_login.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -63,38 +71,33 @@ public class LoginFrame extends javax.swing.JFrame {
                 btn_login_loginMouseReleased(evt);
             }
         });
+        btn_login_login.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Roboto Bk", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Login");
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("LOGIN");
+        btn_login_login.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 10, 210, -1));
 
-        javax.swing.GroupLayout btn_login_loginLayout = new javax.swing.GroupLayout(btn_login_login);
-        btn_login_login.setLayout(btn_login_loginLayout);
-        btn_login_loginLayout.setHorizontalGroup(
-            btn_login_loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btn_login_loginLayout.createSequentialGroup()
-                .addContainerGap(86, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(84, 84, 84))
-        );
-        btn_login_loginLayout.setVerticalGroup(
-            btn_login_loginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(btn_login_loginLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanel2.add(btn_login_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 210, 40));
 
-        jLabel2.setFont(new java.awt.Font("Roboto Bk", 0, 25)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Eagle Reviewer");
+        tf_login_id.setBackground(new java.awt.Color(102, 102, 102));
+        tf_login_id.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        tf_login_id.setForeground(new java.awt.Color(255, 255, 255));
+        tf_login_id.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tf_login_id.setText("ID");
+        tf_login_id.setToolTipText("");
+        tf_login_id.setBorder(null);
+        tf_login_id.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tf_login_idMouseClicked(evt);
+            }
+        });
+        jPanel2.add(tf_login_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 210, 30));
 
-        jLabel3.setFont(new java.awt.Font("Roboto Bk", 0, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/eaglereviewer icon.png"))); // NOI18N
-
+        pf_login_password.setBackground(new java.awt.Color(102, 102, 102));
         pf_login_password.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        pf_login_password.setForeground(new java.awt.Color(0, 131, 143));
+        pf_login_password.setForeground(new java.awt.Color(255, 255, 255));
         pf_login_password.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         pf_login_password.setText("password");
         pf_login_password.setBorder(null);
@@ -103,49 +106,25 @@ public class LoginFrame extends javax.swing.JFrame {
                 pf_login_passwordMouseClicked(evt);
             }
         });
+        jPanel2.add(pf_login_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 210, 30));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tf_login_id)
-                            .addComponent(btn_login_login, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pf_login_password))))
-                .addContainerGap(30, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(56, 56, 56))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(tf_login_id, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pf_login_password, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btn_login_login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
+        jLabel4.setFont(new java.awt.Font("Roboto Bk", 0, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("ID:");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Roboto Bk", 0, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("PASSWORD:");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, -1, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(38, 260, 250, 260));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,8 +175,8 @@ public class LoginFrame extends javax.swing.JFrame {
         });
     }
     
-     private void authenticateUser(String id, String password) throws 
-            FirebaseException, UnsupportedEncodingException, IOException, 
+     private void authenticateUser(String id, String password) 
+             throws FirebaseException, UnsupportedEncodingException, IOException, 
             FileNotFoundException, ParseException {
         
         UrlManager url = new UrlManager();
@@ -208,13 +187,17 @@ public class LoginFrame extends javax.swing.JFrame {
             String name = new FirebaseCaller(url.setAdmin(id) + url.getName())
                     .getUserName(); //gets name from the link
             
+            String course = new FirebaseCaller(url.setAdmin(id) + url.getCourse())
+                    .getUserCourse();
+            
             //save into shared preferences
             SharedPrefManager spm = new SharedPrefManager();
             spm.setId(id);
             spm.setName(name);
+            spm.setCourse(course);
             
             this.dispose(); //closes login frame
-            new MainFrame(id, name).setVisible(true); //opens main frame
+            new MainFrame(id, name, course).setVisible(true); //opens main frame
             
         } else {
             JOptionPane.showMessageDialog(null, "Wrong id or password");
@@ -227,10 +210,12 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField pf_login_password;
     private javax.swing.JTextField tf_login_id;
     // End of variables declaration//GEN-END:variables
 
-   
 }

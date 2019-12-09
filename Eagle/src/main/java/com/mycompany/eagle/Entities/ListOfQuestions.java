@@ -46,10 +46,45 @@ public class ListOfQuestions {
     public void setQuestions(ArrayList<Question> questions) {
         this.questions = questions;
     }
-    
 
-    public ListOfQuestions readQuestions() throws FileNotFoundException, IOException, 
-            ParseException {
+    public ListOfQuestions readQuestions(String course, String category, 
+            String subject) 
+            throws FileNotFoundException, IOException, ParseException {
+        //Read list of questions in file then save in an arraylist 
+        JSONObject obj = (JSONObject) new JSONParser()
+                .parse(new FileReader("ListOfQuestions.json")); 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        QuestionsDeserializer deserializer = new QuestionsDeserializer(course, 
+                category, subject);
+        gsonBuilder.registerTypeAdapter(ListOfQuestions.class, deserializer);
+         
+        Gson customGson = gsonBuilder.create();
+        System.out.println(obj.toJSONString());
+        ListOfQuestions questionList = customGson.fromJson(obj.toJSONString(), 
+                 ListOfQuestions.class);
+         
+        return questionList;
+    }
+    
+    public ListOfQuestions readQuestions(String id) 
+            throws FileNotFoundException, IOException, ParseException {
+        //Read list of questions in file then save in an arraylist 
+        JSONObject obj = (JSONObject) new JSONParser()
+                .parse(new FileReader("ListOfQuestions.json")); 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        QuestionsDeserializer deserializer = new QuestionsDeserializer(id);
+        gsonBuilder.registerTypeAdapter(ListOfQuestions.class, deserializer);
+         
+        Gson customGson = gsonBuilder.create();
+        System.out.println(obj.toJSONString());
+        ListOfQuestions questionList = customGson.fromJson(obj.toJSONString(), 
+                 ListOfQuestions.class);
+         
+        return questionList;
+    }
+    
+    public ListOfQuestions readQuestions() 
+            throws FileNotFoundException, IOException, ParseException {
         //Read list of questions in file then save in an arraylist 
         JSONObject obj = (JSONObject) new JSONParser()
                 .parse(new FileReader("ListOfQuestions.json")); 
@@ -97,6 +132,21 @@ public class ListOfQuestions {
 
   
     public static class QuestionsDeserializer implements JsonDeserializer<ListOfQuestions>{
+        private String course, category, subject, id;
+
+        public QuestionsDeserializer() {
+        }
+        
+        private QuestionsDeserializer(String course, String category, 
+                String subject) {
+            this.course = course;
+            this.category = category;
+            this.subject = subject;
+        }
+
+        private QuestionsDeserializer(String id) {
+            this.id = id;
+        }
 
         @Override
         public ListOfQuestions deserialize(JsonElement je, java.lang.reflect.Type type, 
@@ -115,7 +165,20 @@ public class ListOfQuestions {
                 JsonElement jsonElement = entry.getValue();
                 Question question = gson.fromJson(jsonElement,
                         Question.class);
-                questions.add(question);
+                
+                if (course != null && category != null && subject != null){
+                    if(course.equals(question.getCourse()) && 
+                        category.equals(question.getDifficulty()) && 
+                        subject.equals(question.getSubject())){
+                    questions.add(question);                   
+                    }
+                    
+                } else if (id != null){
+                    questions.add(question); 
+                
+                } else {
+                    questions.add(question);
+                }     
             }
 
             listOfQuestions.setQuestions(questions);

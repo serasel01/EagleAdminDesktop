@@ -55,6 +55,10 @@ public class UrlManager {
         return "/ad_name";
     }
     
+    public String getCourse(){
+        return "/ad_course";
+    }
+    
     public String getMain(){
         return main_url;
     }

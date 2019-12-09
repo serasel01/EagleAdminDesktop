@@ -8,10 +8,22 @@ package com.mycompany.eagle.Dialogs;
 import com.mycompany.eagle.Entities.Student;
 import com.mycompany.eagle.Frames.*;
 import com.mycompany.eagle.Utilities.FirebaseCaller;
+import com.mycompany.eagle.Utilities.GoogleCloudCaller;
 import com.mycompany.eagle.Utilities.UrlManager;
+import java.net.MalformedURLException;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import net.thegreshams.firebase4j.error.FirebaseException;
 
@@ -21,6 +33,8 @@ import net.thegreshams.firebase4j.error.FirebaseException;
  */
 public class StudentDialog extends javax.swing.JDialog {
     private Student student;
+    private String filePath;
+    private File file;
     
     public StudentDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -31,14 +45,18 @@ public class StudentDialog extends javax.swing.JDialog {
         initComponents();
     }
 
-    public StudentDialog(Student student) {
+    public StudentDialog(Student student) throws IOException {
         initComponents();
         this.student = student;
         tf_student_name.setText(student.getStu_name());
         tf_student_id.setText(student.getStu_id());
-        tf_student_course.setText(student.getStu_course());
+        pf_student_password.setText(student.getStu_password());
         lb_student_add.setText("UPDATE");
         lb_student_function.setText("Edit Student");
+        cb_student_course.setSelectedItem(student.getStu_course());
+        
+        file = new File("reviewees/" + student.getStu_id() + ".jpg");      
+        loadPhoto();
     }
 
     /**
@@ -55,14 +73,19 @@ public class StudentDialog extends javax.swing.JDialog {
         jPanel3 = new javax.swing.JPanel();
         tf_student_id = new javax.swing.JTextField();
         tf_student_name = new javax.swing.JTextField();
-        tf_student_course = new javax.swing.JTextField();
         btn_student_cancel = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         btn_student_add = new javax.swing.JPanel();
         lb_student_add = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        pf_student_password = new javax.swing.JPasswordField();
+        cb_student_course = new javax.swing.JComboBox<>();
+        lb_student_image = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        btn_student_image = new javax.swing.JPanel();
+        lb_student_add1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -80,7 +103,7 @@ public class StudentDialog extends javax.swing.JDialog {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addComponent(lb_student_function)
-                .addContainerGap(267, Short.MAX_VALUE))
+                .addContainerGap(327, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -90,23 +113,23 @@ public class StudentDialog extends javax.swing.JDialog {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 430, 70));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 490, 70));
 
-        jPanel3.setBackground(new java.awt.Color(102, 102, 102));
+        jPanel3.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        tf_student_id.setBackground(new java.awt.Color(102, 102, 102));
         tf_student_id.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        tf_student_id.setForeground(new java.awt.Color(0, 131, 143));
+        tf_student_id.setForeground(new java.awt.Color(255, 255, 255));
         tf_student_id.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        tf_student_id.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        tf_student_id.setBorder(null);
+        jPanel3.add(tf_student_id, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 230, 130, 35));
 
+        tf_student_name.setBackground(new java.awt.Color(102, 102, 102));
         tf_student_name.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        tf_student_name.setForeground(new java.awt.Color(0, 131, 143));
-        tf_student_name.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
-
-        tf_student_course.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        tf_student_course.setForeground(new java.awt.Color(0, 131, 143));
-        tf_student_course.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        tf_student_course.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        tf_student_name.setForeground(new java.awt.Color(255, 255, 255));
+        tf_student_name.setBorder(null);
+        jPanel3.add(tf_student_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, 367, 36));
 
         btn_student_cancel.setBackground(new java.awt.Color(102, 102, 102));
         btn_student_cancel.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -119,21 +142,23 @@ public class StudentDialog extends javax.swing.JDialog {
         jLabel10.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/multiply.png"))); // NOI18N
         jLabel10.setText("CANCEL");
-        jLabel10.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
 
         javax.swing.GroupLayout btn_student_cancelLayout = new javax.swing.GroupLayout(btn_student_cancel);
         btn_student_cancel.setLayout(btn_student_cancelLayout);
         btn_student_cancelLayout.setHorizontalGroup(
             btn_student_cancelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
         );
         btn_student_cancelLayout.setVerticalGroup(
             btn_student_cancelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
 
-        btn_student_add.setBackground(new java.awt.Color(0, 191, 209));
+        jPanel3.add(btn_student_cancel, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 330, -1, -1));
+
+        btn_student_add.setBackground(new java.awt.Color(255, 152, 0));
         btn_student_add.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btn_student_addMouseClicked(evt);
@@ -144,78 +169,92 @@ public class StudentDialog extends javax.swing.JDialog {
         lb_student_add.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
         lb_student_add.setForeground(new java.awt.Color(255, 255, 255));
         lb_student_add.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_student_add.setIcon(new javax.swing.ImageIcon(getClass().getResource("/add.png"))); // NOI18N
         lb_student_add.setText("ADD");
-        lb_student_add.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
 
         javax.swing.GroupLayout btn_student_addLayout = new javax.swing.GroupLayout(btn_student_add);
         btn_student_add.setLayout(btn_student_addLayout);
         btn_student_addLayout.setHorizontalGroup(
             btn_student_addLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lb_student_add, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+            .addComponent(lb_student_add, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
         );
         btn_student_addLayout.setVerticalGroup(
             btn_student_addLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lb_student_add, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
+            .addComponent(lb_student_add, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
         );
 
-        jLabel1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Name:");
+        jPanel3.add(btn_student_add, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 330, 153, -1));
 
         jLabel2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("ID:");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Course:");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 240, -1, -1));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tf_student_name)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(tf_student_id, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                                .addGap(23, 23, 23)
-                                .addComponent(jLabel3))
-                            .addComponent(btn_student_add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btn_student_cancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tf_student_course))))
-                .addContainerGap(26, Short.MAX_VALUE))
+        jLabel4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Password:");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 290, -1, -1));
+
+        pf_student_password.setBackground(new java.awt.Color(102, 102, 102));
+        pf_student_password.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        pf_student_password.setForeground(new java.awt.Color(255, 255, 255));
+        pf_student_password.setText("password");
+        pf_student_password.setBorder(null);
+        pf_student_password.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                pf_student_passwordMouseClicked(evt);
+            }
+        });
+        jPanel3.add(pf_student_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 130, 35));
+
+        cb_student_course.setBackground(new java.awt.Color(102, 102, 102));
+        cb_student_course.setForeground(new java.awt.Color(255, 255, 255));
+        cb_student_course.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BSECE", "BSN" }));
+        jPanel3.add(cb_student_course, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 230, 142, 35));
+
+        lb_student_image.setBackground(new java.awt.Color(51, 51, 51));
+        lb_student_image.setForeground(new java.awt.Color(51, 51, 51));
+        lb_student_image.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_student_image.setIcon(new javax.swing.ImageIcon(getClass().getResource("/photo (1).png"))); // NOI18N
+        jPanel3.add(lb_student_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 10, 150, 120));
+
+        jLabel5.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Name:");
+        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, -1, -1));
+
+        btn_student_image.setBackground(new java.awt.Color(139, 195, 74));
+        btn_student_image.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_student_imageMouseClicked(evt);
+            }
+        });
+
+        lb_student_add1.setBackground(new java.awt.Color(102, 102, 102));
+        lb_student_add1.setFont(new java.awt.Font("Roboto", 1, 12)); // NOI18N
+        lb_student_add1.setForeground(new java.awt.Color(255, 255, 255));
+        lb_student_add1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb_student_add1.setText("ATTACH PHOTO");
+
+        javax.swing.GroupLayout btn_student_imageLayout = new javax.swing.GroupLayout(btn_student_image);
+        btn_student_image.setLayout(btn_student_imageLayout);
+        btn_student_imageLayout.setHorizontalGroup(
+            btn_student_imageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lb_student_add1, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_student_name, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_student_id, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_student_course, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addGap(26, 26, 26)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btn_student_cancel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_student_add, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+        btn_student_imageLayout.setVerticalGroup(
+            btn_student_imageLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(lb_student_add1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 430, 200));
+        jPanel3.add(btn_student_image, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, 150, 30));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 480, 390));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -226,27 +265,53 @@ public class StudentDialog extends javax.swing.JDialog {
 
     private void btn_student_addMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_student_addMouseClicked
         try {
-            addStudent(tf_student_id.getText(), tf_student_name.getText(), tf_student_course.getText());
+            filePath = filePath.replace("\\", "\\\\");
             
             if (student == null){
                 JOptionPane.showMessageDialog(null, tf_student_name.getText() 
-                        + "has been added successfully.");
+                        + " has been added successfully.");
+                
+                addStudent(tf_student_id.getText(), tf_student_name.getText(), 
+                        (String) cb_student_course.getSelectedItem(), 
+                        pf_student_password.getText(), 0, savePhoto(tf_student_id.getText()));
+                
+                
             } else {
                 JOptionPane.showMessageDialog(null, tf_student_name.getText() 
                         + "'s information updated successfully.");
+                updateStudent(tf_student_id.getText(), tf_student_name.getText(), 
+                    (String) cb_student_course.getSelectedItem(), 
+                    pf_student_password.getText(), savePhoto(tf_student_id.getText()));
             }
             
             this.dispose();
-        } catch (FirebaseException ex) {
+        } catch (FirebaseException | UnsupportedEncodingException ex) {
             Logger.getLogger(StudentDialog.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(StudentDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btn_student_addMouseClicked
 
-    /**
-     * @param args the command line arguments
-     */
+    private void pf_student_passwordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pf_student_passwordMouseClicked
+        if (pf_student_password.getText().equals("password")){
+            pf_student_password.setText("");
+        }
+    }//GEN-LAST:event_pf_student_passwordMouseClicked
+
+    private void btn_student_imageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_student_imageMouseClicked
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(null);
+        
+        file = chooser.getSelectedFile();
+        filePath = file.getAbsolutePath();   
+        try {
+            loadPhoto();
+        } catch (IOException ex) {
+            Logger.getLogger(StudentDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btn_student_imageMouseClicked
+
+   
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -286,26 +351,63 @@ public class StudentDialog extends javax.swing.JDialog {
             }
         });
     }
+    
+    private void addStudent(String id, String name, String course, 
+            String password, int count, String imagePath) 
+            throws FirebaseException, UnsupportedEncodingException {
+       new FirebaseCaller(new UrlManager().setStudents())
+               .addStudent(id, name, course, password, count, imagePath);
+    }
+
+    private void updateStudent(String id, String name, String course, String password, String savePhoto) throws FirebaseException, 
+            UnsupportedEncodingException {
+        
+        new FirebaseCaller(new UrlManager().setStudent(id))
+               .updateStudent(name, course, password);
+    }
+    
+    private String savePhoto(String id) throws IOException {
+        //save to local directory
+        BufferedImage image = ImageIO.read(file);
+        ImageIO.write(image, "jpg", new File("reviewees/" + id + ".jpg"));
+        
+        //upload to Firebase Storage and gets the link
+        FileInputStream photo = new FileInputStream(new File(filePath));
+        GoogleCloudCaller gc_call = new GoogleCloudCaller();
+        String webPath = gc_call.saveImage(id, photo);
+        
+        //returns link
+        return webPath;
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel btn_student_add;
     private javax.swing.JPanel btn_student_cancel;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel btn_student_image;
+    private javax.swing.JComboBox<String> cb_student_course;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lb_student_add;
+    private javax.swing.JLabel lb_student_add1;
     private javax.swing.JLabel lb_student_function;
-    private javax.swing.JTextField tf_student_course;
+    private javax.swing.JLabel lb_student_image;
+    private javax.swing.JPasswordField pf_student_password;
     private javax.swing.JTextField tf_student_id;
     private javax.swing.JTextField tf_student_name;
     // End of variables declaration//GEN-END:variables
 
-    private void addStudent(String id, String name, String course) 
-            throws FirebaseException, UnsupportedEncodingException {
-       new FirebaseCaller(new UrlManager().setStudents())
-               .addStudent(id, name, course);
+    private void loadPhoto() throws IOException {
+        BufferedImage img = ImageIO.read(file);    
+        Image image = img.getScaledInstance(lb_student_image.getWidth(),
+                    lb_student_image.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(image);  
+        lb_student_image.setIcon(icon);
     }
+
 }

@@ -16,6 +16,7 @@ public class SharedPrefManager {
     private Preferences prefs;
     private String USER_ID = "USER_ID";
     private String USER_NAME = "USER_NAME";
+    private String USER_COURSE = "USER_COURSE";
 
     public SharedPrefManager() {
         prefs = Preferences.userRoot();
@@ -35,6 +36,14 @@ public class SharedPrefManager {
     
     public String getName(){
         return prefs.get(USER_NAME, null);
+    }
+    
+    public void setCourse(String course){
+        prefs.put(USER_COURSE, course);
+    }
+    
+    public String getCourse(){
+        return prefs.get(USER_COURSE, null);
     }
     
     public void logout() throws BackingStoreException {

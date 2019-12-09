@@ -58,6 +58,12 @@ public class FirebaseCaller {
         response = firebase.get(); //firebase.get gets the value which is the response
         return response.getRawBody().replaceAll("^\"|\"$", "");  //replace all removes special characters
     }
+    
+    public String getUserCourse() throws FirebaseException,
+            UnsupportedEncodingException {
+        response = firebase.get(); //firebase.get gets the value which is the response
+        return response.getRawBody().replaceAll("^\"|\"$", "");  //replace all removes special characters
+    }
 
     public void deleteStudent() throws FirebaseException, UnsupportedEncodingException {
         response = firebase.delete();
@@ -85,12 +91,12 @@ public class FirebaseCaller {
         return customObject.getStudents(); //returns the generated and populated arraylist
     }
 
-    public ArrayList<Result> getResults(String date, String subject) 
+    public ArrayList<Result> getResults(String subject) 
             throws FirebaseException,
             UnsupportedEncodingException {
         response = firebase.get();
         GsonBuilder gsonBuilder = new GsonBuilder();
-        ResultDeserializer deserializer = new ResultDeserializer(date, subject);
+        ResultDeserializer deserializer = new ResultDeserializer(subject);
         gsonBuilder.registerTypeAdapter(ListOfResults.class, deserializer);
 
         Gson customGson = gsonBuilder.create();
@@ -111,11 +117,20 @@ public class FirebaseCaller {
 //        response = firebase.put("BSECE_Subjects", customGson.toJson(question));
 //    }
 
-    public void addStudent(String id, String name, String course)
+    public void addStudent(String id, String name, String course, 
+            String password, int count, String imagePath)
             throws FirebaseException, UnsupportedEncodingException {
 
-        Student student = new Student(course, id, name);
+        Student student = new Student(course, id, name, password, count, imagePath);
         response = firebase.put(id, new Gson().toJson(student));
+    }
+    
+    public void updateStudent(String name, String course, String password)
+            throws FirebaseException, UnsupportedEncodingException {
+
+        response = firebase.put("stu_course", new Gson().toJson(course));
+        response = firebase.put("stu_name", new Gson().toJson(name));
+        response = firebase.put("stu_password", new Gson().toJson(password));
     }
 
     public void publishQuestion(Question question) throws FirebaseException,
@@ -195,30 +210,35 @@ public class FirebaseCaller {
 
     public class ResultDeserializer implements JsonDeserializer<ListOfResults> {
 
-        private String date, subject;
+        private String subject;
         
-        public ResultDeserializer(String date, String subject) {
-            this.date = date;
+        public ResultDeserializer(String subject) {         
             this.subject = subject;
         }
 
         @Override
         public ListOfResults deserialize(JsonElement json, Type type,
                 JsonDeserializationContext jdc) throws JsonParseException {
-
+            
+            //gets reference as json object
             JsonObject jsonObject = json.getAsJsonObject();
+            
+            //reference is made into a set
             Set<Entry<String, JsonElement>> objects = jsonObject.entrySet();
 
             ListOfResults listOfResults = new ListOfResults();
             ArrayList<Result> results = new ArrayList<>();
             Gson gson = new Gson();
 
+            //iterates through each exam result
             for (Entry<String, JsonElement> entry : objects) {                
                 JsonElement jsonElement = entry.getValue();
                 
+                //gets each result into an object of Result class
                 Result info = gson.fromJson(jsonElement,
                         Result.class);
 
+                //gets all subtopics and stores into an arraylist
                 ArrayList<String> subtopics = new ArrayList<>();
                 JsonArray jsonArray = jsonElement.getAsJsonObject()
                         .get("Subtopics").getAsJsonArray();
@@ -228,19 +248,12 @@ public class FirebaseCaller {
                 while (itr.hasNext()) { 
                     JsonPrimitive jo = (JsonPrimitive) itr.next();
                     subtopics.add(jo.getAsString());
-                }
-                
+                }             
                 info.setSubtopics(subtopics);
-                System.out.println(info.getRes_subject() + " " + subject);
-                System.out.println(info.getRes_date()+ " " + date);
+                
                 
                 if (subject == null || subject.equals(info.getRes_subject())){
-                    System.out.println("nigga i'm in");
-                    
-                    if (date == null || date.replaceAll("-", "/").equals(info.getRes_date())){
-                        System.out.println("ok nigga");
-                        results.add(info);
-                    }
+                    results.add(info);
                 }             
             }
 
