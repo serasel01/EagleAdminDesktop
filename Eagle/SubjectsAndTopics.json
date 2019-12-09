@@ -1,0 +1,101 @@
+{
+	"BSECE":{
+		"Mathematics":{
+			"1":"Algebra & General Mathematics",
+			"2":"Geometry",
+			"3":"Trigonometry",
+			"4":"Calculus",
+			"5":"Mathematics Laws, Terms and Theories"
+		}, 
+		"General Engineering and Applied Sciences":{
+			"1":"Engineering Mechanics",
+			"2":"Strength of Materials",
+			"3":"College Physics",
+			"4":"General Chemistry",
+			"5":"Thermodynamics",
+			"6":"Engineering Materials",
+			"7":"Engineering Economics",
+			"8":"Engineering Management",
+			"9":"Laws and Ethics"
+		},
+		"Electronics Engineering":{
+			"1":"Electricity / Magnetism Fundamentals",
+			"2":"Electrical Circuit",
+			"3":"Solid State Devices/Circuits",
+			"4":"Power Generator/Sources/Principles/Applications",
+			"5":"Electronic (Audio/RF) Circuit/Analysis/Design Cells and batteries",
+			"6":"Tests and Measurements",
+			"7":"Microelectronics",
+			"8":"Industrial Electronics Principles/Applications",
+			"9":"Computer Principles"
+		},
+		"Electronics Systems and Technologies":{
+			"1":"Radio Communication System",
+			"2":"Digital and Data Communications Systems",
+			"3":"Satellite , Broadcasting and Cable TV Systems"
+		}
+	},
+
+	"BSN":{
+		"Foundations of Nursing Practice Including Professional Adjustment":{
+			"1":"Professional Nursing",
+			"2":"Health and Illness Behavior",
+			"3":"Interactive Processes",
+			"4":"Safety, Comfort and Hygiene",
+			"5":"Basic Physiological Needs",
+			"6":"Basic Psychosocial Needs",
+			"7":"Basic Nursing Skills",
+			"8":"Ethico-legal Aspects",
+			"9":"Management and Leadership",
+			"10":"Basic Research"
+		}, 
+		"Maternal and Child Health Nursing":{
+			"1":"Foundation of Maternal and Child Health Nursing Practice/Biophysical Aspects of Human Reproduction",
+			"2":"Pregnancy-Antepartum",
+			"3":"Pregnancy-intrapartum",
+			"4":"Postpartum and Newborn",
+			"5":"Puerperium and Infancy",
+			"6":"Toddler",
+			"7":"Pre-Schooler/Schooler",
+			"8":"Pre-adolescent/Adolescent",
+			"9":"Problems/Disorders in Children",
+			"10":"Problem/Disorders in Mothers including gynecologic disorders"
+		},
+		"Community Health Nursing and Communicable Disease Nursing":{
+			"1":"The Philippine Health Care Delivery System",
+			"2":"Legislations affecting Community Health Nursing Practice",
+			"3":"Primary Health Care",
+			"4":"Health Programs, Services and Strategies",
+			"5":"Care of Older Persons",
+			"6":"Community Health Nursing",
+			"7":"Roles, Functions and Responsibilities of the Community Health Nurse",
+			"8":"Nursing Care of clients with communicable diseases",
+			"9":"Nursing Care of clients with Non-Communicable Diseases",
+			"10":"Research in Community Health Nursing"
+		},
+		"Nursing Care of Adolescents, Adults and Aged":{
+			"1":"Concepts of Stress and Illness",
+			"2":"Nursing Interventions in Illness",
+			"3":"Care of Patients with Specific Disturbances",
+			"4":"Care of Patients with Peripheral Vascular Disorders",
+			"5":"Care of Patients with Urinary Disorders",
+			"6":"Care of Patients with Integumentary Disorders",
+			"7":"Care of Patients with Hematologic Disorders",
+			"8":"Care of Patients with Neurologic Disorders",
+			"9":"Care of Patients Experiencing Disorders of the Liver, Biliary Tract and Pancreas",
+			"10":"Nurses Role"
+		},
+		"Mental Health and Psychiatric Nursing":{
+			"1":"Personality development and principles of mental health",
+			"2":"Crisis and Crisis Intervention",
+			"3":"Anxiety Response and Anxiety Disorders",
+			"4":"Anxiety Disorders in Childhood and Adolescence",
+			"5":"Psychophysiologic disorders",
+			"6":"Personality disorders",
+			"7":"Emotional responses and mood disorders",
+			"8":"Thought disorders (Schizophrenia and psychotic disorders)",
+			"9":"Substance abuse and related disorders",
+			"10":"Organic Mental Syndrome and Disorders"
+		}
+	}
+}
