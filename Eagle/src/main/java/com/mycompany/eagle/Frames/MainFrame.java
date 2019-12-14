@@ -8,10 +8,13 @@ import com.mycompany.eagle.Entities.Question;
 import com.mycompany.eagle.Entities.Result;
 import com.mycompany.eagle.Entities.Student;
 import com.mycompany.eagle.Utilities.FirebaseCaller;
+import com.mycompany.eagle.Utilities.GoogleCloudCaller;
 import com.mycompany.eagle.Utilities.SharedPrefManager;
 import com.mycompany.eagle.Utilities.UrlManager;
 import java.awt.Color;
 import java.awt.Component;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -913,7 +916,15 @@ public class MainFrame extends javax.swing.JFrame {
                     new FirebaseCaller(new UrlManager().setQuestion(question))
                             .publishQuestion(question);
                     new FirebaseCaller(new UrlManager().setKeywords(question))
-                            .publishKeywords(question);                       
+                            .publishKeywords(question);
+                    
+                    if(question.getQ_imagePath() != null){
+                        //upload to Firebase Storage and gets the link
+                    FileInputStream photo = new FileInputStream(
+                            new File(question.getQ_imagePath()));
+                    GoogleCloudCaller gc_call = new GoogleCloudCaller();
+                    gc_call.saveImage(id, photo);
+                    }                 
                 }
             }
             
@@ -1109,6 +1120,7 @@ public class MainFrame extends javax.swing.JFrame {
         data.add(question.getQ_rationale());
         data.add(question.getQ_answer());
         model.addRow(data);       
+        
     }
     
     private DefaultTableModel setRevieweeTable () { //formats table

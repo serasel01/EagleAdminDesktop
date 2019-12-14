@@ -36,12 +36,11 @@ public class GoogleCloudCaller {
         blob.downloadTo(destFilePath);      
     }
     
-    public String saveImage(String id, FileInputStream image){
+    public void saveImage(String id, FileInputStream image){
         BlobId blobId = BlobId.of(bucketName, "Reviewees/" + id + ".jpg");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
                 .setAcl(new ArrayList<>(Arrays.asList(Acl.of(User.ofAllUsers(), Role.READER))))
                 .build();
-        Blob blob = storage.create(blobInfo, image);
-        return blob.getMediaLink();
+        storage.create(blobInfo, image);        
     }
 }

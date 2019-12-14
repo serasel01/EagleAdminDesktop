@@ -544,7 +544,7 @@ public class QuestionDialog extends javax.swing.JDialog {
             
             if (filePath != null){
                 try {
-                    question.setQ_imagePath(savePhoto(question.getQ_uid()));
+                    question.setQ_imagePath(savePhotoLocally(question.getQ_uid()));
                 } catch (IOException ex) {
                     Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -556,11 +556,11 @@ public class QuestionDialog extends javax.swing.JDialog {
             
             if (filePath != null) {
                 try {
-                    String webPath = savePhoto(id);
+                    String localPath = savePhotoLocally(id);
                     
                     question = new Question(q_a, q_b, q_c, q_d, q_question,
                     q_rationale, correct_answer, id, course, subject, topic, 
-                        difficulty, keywords, "false", webPath);
+                        difficulty, keywords, "false", localPath);
                     
                 } catch (IOException ex) {
                     Logger.getLogger(QuestionDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -683,18 +683,13 @@ public class QuestionDialog extends javax.swing.JDialog {
         return builder.toString();
     }
     
-    private String savePhoto(String id) throws IOException {
+    private String savePhotoLocally(String id) throws IOException {
         //save to local directory
         BufferedImage image = ImageIO.read(file);
         ImageIO.write(image, "jpg", new File("questions/" + id + ".jpg"));
         
-        //upload to Firebase Storage and gets the link
-        FileInputStream photo = new FileInputStream(new File(filePath));
-        GoogleCloudCaller gc_call = new GoogleCloudCaller();
-        String webPath = gc_call.saveImage(id, photo);
-        
         //returns link
-        return webPath;
+        return filePath;
     }
     
     private void initValues() throws IOException, FileNotFoundException, 

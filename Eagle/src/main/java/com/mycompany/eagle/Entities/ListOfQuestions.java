@@ -214,6 +214,7 @@ public class ListOfQuestions {
                 questionObj.addProperty("topic", question.getTopic());
                 questionObj.addProperty("difficulty", question.getDifficulty());
                 questionObj.addProperty("keywords", question.getKeywords());
+                questionObj.addProperty("isPublished", question.getIsPublished());
                 
                 jsonQuestionsList.add(question.getQ_uid(), questionObj);
             }
