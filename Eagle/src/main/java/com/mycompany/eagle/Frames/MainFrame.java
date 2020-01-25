@@ -928,6 +928,10 @@ public class MainFrame extends javax.swing.JFrame {
                 }
             }
             
+            FileWriter jsonFile = new FileWriter("ListOfQuestions.json");
+            jsonFile.write(new ListOfQuestions().saveQuestions(listOfQuestions));
+            jsonFile.flush();
+            
             JOptionPane.showMessageDialog(null, "Question has published successfully");
             
         } catch (IOException ex) {
